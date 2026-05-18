@@ -1,0 +1,36 @@
+{
+  "scopedRegistries": [
+    {
+      "name": "Meta XR SDK",
+      "url": "https://npm.developer.oculus.com",
+      "scopes": [
+        "com.meta.xr"
+      ]
+    }
+  ],
+  "dependencies": {
+    "com.meta.xr.sdk.core": "201.0.0",
+    "com.meta.xr.sdk.interaction": "201.0.0",
+    "com.meta.xr.sdk.interaction.ovr": "201.0.0",
+    "com.unity.inputsystem": "1.7.0",
+    "com.unity.render-pipelines.universal": "17.0.3",
+    "com.unity.sdk.linux-x86_64": "1.1.0",
+    "com.unity.textmeshpro": "3.0.6",
+    "com.unity.toolchain.linux-x86_64-linux": "1.1.0",
+    "com.unity.xr.interaction.toolkit": "3.0.7",
+    "com.unity.xr.oculus": "4.5.4",
+    "com.unity.xr.openxr": "1.16.1",
+    "com.unity.modules.ai": "1.0.0",
+    "com.unity.modules.androidjni": "1.0.0",
+    "com.unity.modules.animation": "1.0.0",
+    "com.unity.modules.assetbundle": "1.0.0",
+    "com.unity.modules.imgui": "1.0.0",
+    "com.unity.modules.particlesystem": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.physics2d": "1.0.0",
+    "com.unity.modules.ui": "1.0.0",
+    "com.unity.modules.uielements": "1.0.0",
+    "com.unity.modules.unityanalytics": "1.0.0",
+    "com.unity.modules.xr": "1.0.0"
+  }
+}
