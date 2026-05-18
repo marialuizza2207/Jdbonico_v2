@@ -24,7 +24,7 @@ Criar um ambiente educacional imersivo em Realidade Virtual que simule um jardim
 
 **2.3 Descrição Geral do Ambiente Virtual:**
 
-Um jardim ao ar livre com gramado texturizado (PBR), árvores 3D, céu com nuvens (Fantasy Skybox FREE), pavilhão central com colunas e telhado, banco de jardim, estufa com porta animada, poste de luz e fonte d'água. O ambiente contém cinco flores coletáveis espalhadas pelo jardim, três painéis botânicos informativos e a fonte como elemento central interativo. A iluminação usa luz direcional dourada simulando fim de tarde. O jogador se move livremente com colisão física nos elementos sólidos.
+Um jardim ao ar livre com gramado texturizado (PBR), árvores 3D decorativas, céu com nuvens (Fantasy Skybox FREE), pavilhão central com colunas e telhado, banco de jardim, poste de luz e fonte d'água. O ambiente contém cinco flores coletáveis espalhadas pelo jardim e a fonte como elemento central interativo. A iluminação usa luz direcional dourada simulando fim de tarde. O jogador se move livremente com colisão física nos elementos sólidos.
 
 ---
 
@@ -74,13 +74,13 @@ Implementada via `JogadorController.cs` com Unity Input System: teclas WASD para
 - Nome: Árvores 3D (URP_Tree)
 - Tipo: Objeto 3D + Materiais URP
 - Origem: Asset Store (Gratuito)
-- Função: Vegetação realista do jardim sem colisão física
+- Função: Vegetação decorativa do jardim sem colisão física
 
 **ASSET 4**
 - Nome: Primitivos Unity (Cylinder, Cube, Sphere)
 - Tipo: Objeto 3D
 - Origem: Unity Built-in
-- Função: Pavilhão, banco, estufa, poste e flores coletáveis
+- Função: Pavilhão, banco, poste e flores coletáveis
 
 **ASSET 5**
 - Nome: TextMesh Pro
@@ -118,11 +118,8 @@ scene1
 │   │   └── Telhado_Mesh
 │   ├── Banco
 │   │   └── Assento / Pes
-│   ├── Arvores (URP_Tree_1..N)
-│   ├── Poste_Luz
-│   └── Estufa
-│       ├── Estrutura (paredes + teto)
-│       └── Porta_Pivot ← EstufaView (animação)
+│   ├── Arvores                 ← árvores 3D decorativas (sem colisão)
+│   └── Poste_Luz
 │
 └── [--- INTERACTABLES ---]
     ├── Flor_Coletavel_01  (Rosa — 10 pts)
@@ -130,10 +127,7 @@ scene1
     ├── Flor_Coletavel_03  (Orquídea — 25 pts)
     ├── Flor_Coletavel_04  (Girassol — 20 pts)
     ├── Flor_Coletavel_05  (Lavanda — 30 pts)
-    ├── Fonte_Principal    ← FonteController + FonteView (partículas)
-    ├── Planta_Info_01     ← PainelBotanicoController (Bambu)
-    ├── Planta_Info_02     ← PainelBotanicoController (Helicônia)
-    └── Planta_Info_03     ← PainelBotanicoController (Bromélia)
+    └── Fonte_Principal    ← FonteController + FonteView (partículas)
 ```
 
 ---
@@ -142,7 +136,7 @@ scene1
 
 **6.1 Descrição da Interação Principal:**
 
-O jogador se aproxima de uma flor coletável e ela é coletada automaticamente por detecção de proximidade (`Physics.OverlapSphere`). O HUD atualiza a pontuação e o contador de flores em tempo real. Ao se aproximar dos painéis botânicos, um painel flutuante com informações científicas da planta aparece automaticamente. A fonte é ativada com a tecla `E` ao se aproximar, gerando um sistema de partículas que simula jato d'água. A estufa também é ativada com `E`, animando a abertura e fechamento da porta. Todos os interativos possuem `XRSimpleInteractable` para funcionar com os controles do Meta Quest.
+O jogador se aproxima de uma flor coletável e ela é coletada automaticamente por detecção de proximidade (`Physics.OverlapSphere`). O HUD atualiza a pontuação e o contador de flores em tempo real. A fonte é ativada com a tecla `E` ao se aproximar, gerando um sistema de partículas que simula jato d'água. Flores e fonte possuem `XRSimpleInteractable` para funcionar com os controles do Meta Quest. As árvores são decorativas e não possuem interação.
 
 **6.2 Lógica da Interação — Coleta de Flores:**
 
@@ -186,7 +180,7 @@ public class FlorescenteController : MonoBehaviour
 - `/Assets` — Scripts, Prefabs, Materiais, Cenas, Texturas
 - `/ProjectSettings` — Configurações de build, XR, qualidade
 - `/Packages` — manifest.json com dependências
-- `.gitignore` — ignora `/Library`, `/Temp`, `/Builds`, `/Logs`
+- `.gitignore` — ignora `/Library`, `/Temp`, `/Builds`, `/Logs` e pacotes de terceiros grandes
 
 ---
 
@@ -194,8 +188,8 @@ public class FlorescenteController : MonoBehaviour
 
 1. **Etapa 1:** Instalação do Unity 6000.3.14f1 e criação do projeto 3D com URP
 2. **Etapa 2:** Importação do Meta XR SDK 201.0.0 via Package Manager (escopo Meta)
-3. **Etapa 3:** Configuração do XR Origin, câmera principal e `JogadorController` com WASD
-4. **Etapa 4:** Modelagem da cena com primitivos Unity (pavilhão, estufa, banco) e assets importados (árvores, gramado, skybox)
+3. **Etapa 3:** Configuração do XR Origin, câmera principal e `JogadorController` com WASD + rotação por mouse
+4. **Etapa 4:** Modelagem da cena com primitivos Unity (pavilhão, banco) e assets importados (árvores, gramado, skybox)
 5. **Etapa 5:** Aplicação de materiais URP, textura PBR do gramado (tiling 20×20) e configuração da Directional Light
 6. **Etapa 6:** Programação dos scripts em C# com arquitetura MVC — Models, Views, Controllers e GerenciadorJardim Singleton
 7. **Etapa 7:** Adição de `XRSimpleInteractable`, `SphereCollider` e `CharacterController` nos objetos; configuração dos Editor Scripts no menu EcoBotanica
@@ -212,7 +206,7 @@ Compreendi na prática como o XR Interaction Toolkit abstrai a diferença entre 
 O maior desafio foi o ambiente Linux: o Meta XR SDK não foi projetado para Linux, causando crashes no Editor (`OVRProjectConfig` / `ArgumentOutOfRangeException`) e impossibilidade de usar o Quest Link. A solução foi corrigir o bug diretamente no arquivo do pacote e desabilitar os loaders XR na plataforma PC. Outro desafio foi a incompatibilidade total do NatureStarterKit2 (Tree Creator) com URP, que resultou na migração para árvores 3D de outro pacote.
 
 **9.3 Melhorias Futuras:**
-- Adicionar narração em áudio ao se aproximar de cada planta
+- Adicionar narração em áudio ao se aproximar de cada flor coletada
 - Implementar modo multiplayer com Photon PUN2 para visitas guiadas em grupo
 - Expandir o jardim com mais biomas (aquático, deserto, floresta tropical)
 - Adicionar um sistema de missões com recompensas progressivas

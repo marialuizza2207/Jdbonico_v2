@@ -3,7 +3,7 @@
 > **Web 3.0 | Residência em TIC 29 — Unidade 1 / Capítulo 3**
 > Aluna: Maria Luiza de Moraes Mazon | Professora: Ana Beatriz
 
-Ambiente VR interativo criado em Unity 6 com Meta XR SDK. O jogador explora um jardim botânico virtual, coleta flores luminosas espalhadas pelo jardim, consulta painéis botânicos flutuantes com informações científicas sobre plantas, ativa uma fonte d'água e interage com uma estufa animada. Totalmente testável no Unity Editor via teclado e mouse, sem necessidade de headset.
+Ambiente VR interativo criado em Unity 6 com Meta XR SDK. O jogador explora um jardim botânico virtual, coleta flores luminosas espalhadas pelo jardim e ativa uma fonte d'água. Totalmente testável no Unity Editor via teclado e mouse, sem necessidade de headset.
 
 ---
 
@@ -38,7 +38,7 @@ Ambiente VR interativo criado em Unity 6 com Meta XR SDK. O jogador explora um j
 | `A` / `←` | Mover para esquerda |
 | `D` / `→` | Mover para direita |
 | Botão direito do mouse + arrastar | Virar horizontalmente |
-| `E` | Interagir (fonte / estufa / painel botânico) |
+| `E` | Ativar a fonte d'água (ao se aproximar) |
 
 ---
 
@@ -47,12 +47,10 @@ Ambiente VR interativo criado em Unity 6 com Meta XR SDK. O jogador explora um j
 | Mecânica | Como funciona |
 |---|---|
 | **Coleta de flores** | Ao se aproximar de uma flor/bolinha coletável, a coleta ocorre automaticamente via `Physics.OverlapSphere`. O HUD atualiza a pontuação e o contador de flores coletadas em tempo real. |
-| **Painéis botânicos** | Scripts implementados (`PainelBotanicoController`, `PainelBotanicoView`): ao se aproximar de um totem `Planta_Info`, um painel flutuante com nome comum, nome científico e curiosidade aparece voltado para o jogador. Os totens ainda precisam ser posicionados na cena no Unity Editor. As árvores decorativas não possuem interação. |
 | **Fonte d'água** | Ao se aproximar da `Fonte_Principal`, o HUD exibe "Pressione E para ativar a fonte!". Ao pressionar `E`, um sistema de partículas simula o jato d'água (partículas azul/ciano que sobem com velocidade e caem com gravidade). O HUD confirma "Fonte ativada! A água jorra!". |
-| **Estufa** | Scripts implementados (`EstufaController`, `EstufaView`): ao se aproximar, o HUD exibe "Pressione E para abrir/fechar a estufa!" e `E` anima abertura/fechamento da porta com pivot na dobradiça. O objeto `Estufa` ainda precisa ser posicionado na cena no Unity Editor. |
 | **HUD World Space** | Sempre visível, segue a câmera com interpolação suave (Lerp/Slerp), exibindo pontuação, contagem de flores, mensagem contextual e estado atual. |
-| **Colisão física** | O jogador (CharacterController) colide com banco e fonte, mas atravessa as árvores livremente. |
-| **Suporte XR (Quest)** | Todos os objetos interativos na cena possuem `XRSimpleInteractable`. Flores e fonte respondem ao trigger dos controles do Meta Quest. |
+| **Colisão física** | O jogador (CharacterController) colide com banco e fonte, mas atravessa as árvores livremente. As árvores são decorativas e não possuem interação. |
+| **Suporte XR (Quest)** | Flores e fonte possuem `XRSimpleInteractable` e respondem ao trigger dos controles do Meta Quest. |
 
 ---
 
@@ -70,14 +68,13 @@ No Metaverso, ambientes educacionais imersivos superam a barreira do desengajame
 
 ## Processo de Criação e Dificuldades
 
-O projeto foi desenvolvido com arquitetura **MVC** (Model-View-Controller), separando dados (`PlantaModel`, `JardimModel`), apresentação (Views) e lógica (Controllers). Scripts Editor automatizam a montagem da cena via menus `EcoBotanica`.
+O projeto foi desenvolvido com arquitetura **MVC** (Model-View-Controller), separando dados (`JardimModel`), apresentação (Views) e lógica (Controllers). Scripts Editor automatizam a montagem da cena via menus `EcoBotanica`.
 
 **Principais desafios:**
 - Configurar o Meta XR SDK 201.0.0 no Linux com Unity 6 (correção de symlinks do NDK)
 - Corrigir `ArgumentOutOfRangeException` no `OVRProjectConfig` (bug Linux no `Enumerable.Range` com SDK version < 200)
 - Shaders do NatureStarterKit2 incompatíveis com URP — substituídos por árvores 3D importadas
 - Conectar referências serializadas entre scripts via Editor Script sem drag-and-drop manual
-- Configurar a cena para que os objetos `Estufa` e `Planta_Info_01/02/03` sejam colocados e salvos (scripts prontos, GameObjects pendentes)
 
 ---
 
@@ -104,7 +101,7 @@ scene1 (Scene)
 │   ├── Directional Light
 │   ├── Pavilhao                ← estrutura central com colunas e telhado
 │   ├── Banco                   ← banco de jardim (colisão física)
-│   ├── Arvores                 ← árvores 3D importadas (sem colisão)
+│   ├── Arvores                 ← árvores 3D importadas (sem colisão, decorativas)
 │   └── Poste_Luz               ← Point Light
 │
 └── [--- INTERACTABLES ---]
@@ -114,8 +111,6 @@ scene1 (Scene)
     ├── Flor_Coletavel_04       ← Girassol   — 20 pts
     ├── Flor_Coletavel_05       ← Lavanda    — 30 pts
     └── Fonte_Principal         ← E → ativa ParticleSystem de água
-
-* Estufa e Planta_Info_01/02/03: scripts prontos, GameObjects ainda não salvos na cena.
 ```
 
 ---
@@ -124,22 +119,18 @@ scene1 (Scene)
 
 ```
 Assets/Scripts/
-├── GerenciadorJardim.cs              ← Singleton central
-├── JogadorController.cs              ← movimento + rotação + detecção por proximidade
+├── GerenciadorJardim.cs          ← Singleton central
+├── JogadorController.cs          ← movimento + rotação + detecção por proximidade
 ├── Models/
-│   ├── PlantaModel.cs                ← dados de uma planta
-│   └── JardimModel.cs                ← estado global do jardim
+│   ├── PlantaModel.cs            ← dados de uma planta (pontos, nome)
+│   └── JardimModel.cs            ← estado global do jardim
 ├── Views/
-│   ├── HUDView.cs                    ← HUD WorldSpace com câmera follow
-│   ├── FlorescenteView.cs            ← oscilação senoidal + rotação
-│   ├── FonteView.cs                  ← ParticleSystem de água
-│   ├── PainelBotanicoView.cs         ← painel flutuante voltado para câmera
-│   └── EstufaView.cs                 ← animação de abertura/fechamento da porta
+│   ├── HUDView.cs                ← HUD WorldSpace com câmera follow
+│   ├── FlorescenteView.cs        ← oscilação senoidal + rotação
+│   └── FonteView.cs              ← ParticleSystem de água
 └── Controllers/
-    ├── FlorescenteController.cs      ← coleta automática + XR
-    ├── FonteController.cs            ← hover + ativação + XR
-    ├── PainelBotanicoController.cs   ← exibir/esconder painel + XR
-    └── EstufaController.cs           ← abrir/fechar porta + XR
+    ├── FlorescenteController.cs  ← coleta automática + XR
+    └── FonteController.cs        ← hover + ativação + XR
 ```
 
 ---

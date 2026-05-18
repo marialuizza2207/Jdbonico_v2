@@ -1,11 +1,10 @@
 // Estado global do jardim — sem MonoBehaviour
 public class JardimModel
 {
-    public int Pontuacao       { get; private set; }
-    public int FloresColetadas { get; private set; }
-    public int TotalFlores     { get; }
-    public bool FonteAtivada   { get; private set; }
-    public bool EstufaAberta   { get; private set; }
+    public int  Pontuacao       { get; private set; }
+    public int  FloresColetadas { get; private set; }
+    public int  TotalFlores     { get; }
+    public bool FonteAtivada    { get; private set; }
 
     public JardimModel(int totalFlores)
     {
@@ -18,9 +17,7 @@ public class JardimModel
         FloresColetadas++;
     }
 
-    public void AtivarFonte()   => FonteAtivada = true;
-    public void AbrirEstufa()   => EstufaAberta = true;
-    public void FecharEstufa()  => EstufaAberta = false;
+    public void AtivarFonte() => FonteAtivada = true;
 
     public bool JardimCompleto => FloresColetadas >= TotalFlores;
 }

@@ -18,13 +18,12 @@ public class GerenciadorJardim : MonoBehaviour
     void Start()
     {
         int total = FindObjectsByType<FlorescenteController>(FindObjectsSortMode.None).Length;
-        if (total == 0) total = 5; // fallback
+        if (total == 0) total = 5;
         modelo = new JardimModel(totalFlores: total);
         AtualizarHUD();
         hud?.ExibirMensagem("Explore o jardim e colete as flores!");
     }
 
-    // Chamado por FlorescenteController ao coletar uma flor
     public void RegistrarColeta(int pontos)
     {
         modelo.RegistrarColeta(pontos);
@@ -37,26 +36,11 @@ public class GerenciadorJardim : MonoBehaviour
         hud?.ExibirMensagem(msg);
     }
 
-    // Chamado por FonteController ao ativar a fonte
     public void RegistrarAtivacaoFonte()
     {
         modelo.AtivarFonte();
         hud?.ExibirMensagem("Fonte ativada! A água jorra!");
         hud?.AtualizarEstado("Fonte: ativa");
-    }
-
-    // Chamado por EstufaController ao abrir/fechar a estufa
-    public void AtualizarEstadoEstufa(bool aberta)
-    {
-        if (aberta) modelo.AbrirEstufa(); else modelo.FecharEstufa();
-        hud?.AtualizarEstado(aberta ? "Estufa: aberta" : "Estufa: fechada");
-        hud?.ExibirMensagem(aberta ? "Porta da estufa aberta!" : "Porta da estufa fechada.");
-    }
-
-    // Chamado por PainelBotanicoController
-    public void ExibirInfoPlanta(PlantaModel planta)
-    {
-        hud?.ExibirMensagem($"{planta.nomeComum} — pressione E para mais info");
     }
 
     private void AtualizarHUD()
