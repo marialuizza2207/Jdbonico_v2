@@ -17,5 +17,14 @@
 .DS_Store
 Thumbs.db
 
-# Assets grandes (>100MB — limite do GitHub)
-# Adicione aqui pacotes de terceiros baixados via Asset Store
+# Assets grandes (pacotes de terceiros do Asset Store — não versionados)
+/Assets/Fantasy Skybox FREE/
+/Assets/Fantasy Skybox FREE.meta
+/Assets/PBR_Grass_Textures/
+/Assets/PBR_Grass_Textures.meta
+/Assets/Tree_Packs/
+/Assets/Tree_Packs.meta
+/Assets/GVOZDY/
+/Assets/GVOZDY.meta
+/Assets/_TerrainAutoUpgrade/
+/Assets/_TerrainAutoUpgrade.meta

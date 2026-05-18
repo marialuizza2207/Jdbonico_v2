@@ -47,12 +47,12 @@ Ambiente VR interativo criado em Unity 6 com Meta XR SDK. O jogador explora um j
 | Mecânica | Como funciona |
 |---|---|
 | **Coleta de flores** | Ao se aproximar de uma flor/bolinha coletável, a coleta ocorre automaticamente via `Physics.OverlapSphere`. O HUD atualiza a pontuação e o contador de flores coletadas em tempo real. |
-| **Painéis botânicos** | Ao se aproximar de `Planta_Info_01/02/03` (Bambu, Helicônia, Bromélia), um painel flutuante com nome comum, nome científico e descrição aparece voltado para o jogador. Pressionar `E` alterna a visibilidade do painel. |
-| **Fonte d'água** | Ao se aproximar da fonte, o HUD exibe "Pressione E para ativar a fonte!". Ao pressionar `E`, um sistema de partículas simula o jato d'água (partículas azul/ciano que sobem com velocidade e caem com gravidade). O HUD confirma "Fonte ativada! A água jorra!". |
-| **Estufa** | Ao se aproximar, o HUD exibe "Pressione E para abrir/fechar a estufa!". Ao pressionar `E`, a porta anima abertura ou fechamento com rotação suave (pivot na dobradiça). |
+| **Painéis botânicos** | Scripts implementados (`PainelBotanicoController`, `PainelBotanicoView`): ao se aproximar de um totem `Planta_Info`, um painel flutuante com nome comum, nome científico e curiosidade aparece voltado para o jogador. Os totens ainda precisam ser posicionados na cena no Unity Editor. As árvores decorativas não possuem interação. |
+| **Fonte d'água** | Ao se aproximar da `Fonte_Principal`, o HUD exibe "Pressione E para ativar a fonte!". Ao pressionar `E`, um sistema de partículas simula o jato d'água (partículas azul/ciano que sobem com velocidade e caem com gravidade). O HUD confirma "Fonte ativada! A água jorra!". |
+| **Estufa** | Scripts implementados (`EstufaController`, `EstufaView`): ao se aproximar, o HUD exibe "Pressione E para abrir/fechar a estufa!" e `E` anima abertura/fechamento da porta com pivot na dobradiça. O objeto `Estufa` ainda precisa ser posicionado na cena no Unity Editor. |
 | **HUD World Space** | Sempre visível, segue a câmera com interpolação suave (Lerp/Slerp), exibindo pontuação, contagem de flores, mensagem contextual e estado atual. |
-| **Colisão física** | O jogador (CharacterController) colide com banco, fonte e barracão, mas atravessa as árvores livremente. |
-| **Suporte XR (Quest)** | Todos os objetos interativos possuem `XRSimpleInteractable`. Flores, fonte, estufa e painéis respondem ao trigger dos controles do Meta Quest. |
+| **Colisão física** | O jogador (CharacterController) colide com banco e fonte, mas atravessa as árvores livremente. |
+| **Suporte XR (Quest)** | Todos os objetos interativos na cena possuem `XRSimpleInteractable`. Flores e fonte respondem ao trigger dos controles do Meta Quest. |
 
 ---
 
@@ -76,8 +76,8 @@ O projeto foi desenvolvido com arquitetura **MVC** (Model-View-Controller), sepa
 - Configurar o Meta XR SDK 201.0.0 no Linux com Unity 6 (correção de symlinks do NDK)
 - Corrigir `ArgumentOutOfRangeException` no `OVRProjectConfig` (bug Linux no `Enumerable.Range` com SDK version < 200)
 - Shaders do NatureStarterKit2 incompatíveis com URP — substituídos por árvores 3D importadas
-- Fazer a porta da estufa animar com pivot correto na dobradiça (não no centro do mesh)
 - Conectar referências serializadas entre scripts via Editor Script sem drag-and-drop manual
+- Configurar a cena para que os objetos `Estufa` e `Planta_Info_01/02/03` sejam colocados e salvos (scripts prontos, GameObjects pendentes)
 
 ---
 
@@ -105,8 +105,7 @@ scene1 (Scene)
 │   ├── Pavilhao                ← estrutura central com colunas e telhado
 │   ├── Banco                   ← banco de jardim (colisão física)
 │   ├── Arvores                 ← árvores 3D importadas (sem colisão)
-│   ├── Poste_Luz               ← Point Light
-│   └── Estufa                  ← greenhouse com porta animada
+│   └── Poste_Luz               ← Point Light
 │
 └── [--- INTERACTABLES ---]
     ├── Flor_Coletavel_01       ← Rosa       — 10 pts
@@ -114,10 +113,9 @@ scene1 (Scene)
     ├── Flor_Coletavel_03       ← Orquídea   — 25 pts
     ├── Flor_Coletavel_04       ← Girassol   — 20 pts
     ├── Flor_Coletavel_05       ← Lavanda    — 30 pts
-    ├── Fonte_Principal         ← E → ativa ParticleSystem de água
-    ├── Planta_Info_01          ← Bambu      — painel botânico flutuante
-    ├── Planta_Info_02          ← Helicônia  — painel botânico flutuante
-    └── Planta_Info_03          ← Bromélia   — painel botânico flutuante
+    └── Fonte_Principal         ← E → ativa ParticleSystem de água
+
+* Estufa e Planta_Info_01/02/03: scripts prontos, GameObjects ainda não salvos na cena.
 ```
 
 ---
