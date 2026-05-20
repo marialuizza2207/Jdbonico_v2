@@ -1,13 +1,12 @@
 using UnityEngine;
 using TMPro;
 
-// Exibe pontuação, progresso e mensagens no HUD World Space (segue a câmera)
 public class HUDView : MonoBehaviour
 {
-    [SerializeField] public TextMeshProUGUI textoPontuacao;
-    [SerializeField] public TextMeshProUGUI textoFlores;
-    [SerializeField] public TextMeshProUGUI textoMensagem;
-    [SerializeField] public TextMeshProUGUI textoEstado;
+    public TextMeshProUGUI textoPontuacao;
+    public TextMeshProUGUI textoFlores;
+    public TextMeshProUGUI textoMensagem;
+    public TextMeshProUGUI textoEstado;
 
     [SerializeField] float distancia    = 2f;
     [SerializeField] float alturaOffset = -0.15f;
@@ -23,7 +22,7 @@ public class HUDView : MonoBehaviour
     void BuscarCamera()
     {
         var cam = Camera.main;
-        if (cam == null) cam = FindFirstObjectByType<Camera>();
+        if (cam == null) cam = FindObjectOfType<Camera>();
         if (cam != null) camTransform = cam.transform;
     }
 

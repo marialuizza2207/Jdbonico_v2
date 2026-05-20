@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// Dados puros de uma planta — sem MonoBehaviour, sem lógica de UI
 [System.Serializable]
 public class PlantaModel
 {

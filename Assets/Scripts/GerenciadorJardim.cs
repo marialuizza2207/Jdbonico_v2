@@ -1,11 +1,10 @@
 using UnityEngine;
 
-// Singleton central — coordena estado global do jardim e atualiza o HUD
 public class GerenciadorJardim : MonoBehaviour
 {
     public static GerenciadorJardim Instancia { get; private set; }
 
-    [SerializeField] public HUDView hud;
+    public HUDView hud;
 
     private JardimModel modelo;
 

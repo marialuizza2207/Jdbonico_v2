@@ -3,10 +3,9 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Rendering;
 
-// Constrói pavilhão, estufa, árvores e poste com geometria real (meshes)
 public class AmbienteBuilder : EditorWindow
 {
-    [MenuItem("EcoBotanica/2. Construir Ambiente (Pavilhão + Estufa)")]
+    [MenuItem("EcoBotanica/2. Construir Ambiente (Pavilhão)")]
     public static void Build()
     {
         var shader = Shader.Find("Universal Render Pipeline/Lit")
@@ -16,12 +15,9 @@ public class AmbienteBuilder : EditorWindow
 
         var matColuna   = Mat(new Color(0.95f, 0.93f, 0.88f));
         var matTelhado  = Mat(new Color(0.55f, 0.35f, 0.15f));
-        var matEstufa   = Mat(new Color(0.70f, 0.90f, 0.70f));
-        var matVidro    = Mat(new Color(0.60f, 0.85f, 0.80f));
         var matTronco   = Mat(new Color(0.42f, 0.26f, 0.12f));
         var matCopa     = Mat(new Color(0.15f, 0.55f, 0.15f));
 
-        // ── Pavilhão ──────────────────────────────────────────────
         var pavilhao = GameObject.Find("Pavilhao");
         if (pavilhao != null)
         {
@@ -61,7 +57,6 @@ public class AmbienteBuilder : EditorWindow
             }
         }
 
-        // ── Banco ──────────────────────────────────────────────────
         var banco = GameObject.Find("Banco");
         if (banco != null)
         {
@@ -78,7 +73,6 @@ public class AmbienteBuilder : EditorWindow
             }
         }
 
-        // ── Árvores ───────────────────────────────────────────────
         Vector3[] posArv = {
             new Vector3(-6f, 0f, -5f),
             new Vector3( 6f, 0f, -5f),
@@ -115,7 +109,6 @@ public class AmbienteBuilder : EditorWindow
             }
         }
 
-        // ── Poste de Luz ──────────────────────────────────────────
         var poste = GameObject.Find("Poste_Luz");
         if (poste != null)
         {
@@ -143,38 +136,6 @@ public class AmbienteBuilder : EditorWindow
             lampada.transform.localPosition = new Vector3(0, 3f, 0);
         }
 
-        // ── Estufa ────────────────────────────────────────────────
-        var estufa = GameObject.Find("Estufa");
-        if (estufa != null)
-        {
-            estufa.transform.position = new Vector3(-8f, 0f, 5f);
-            estufa.AddComponent<EstufaController>();
-
-            var estrutura = ObterOuCriar(estufa, "Estrutura");
-
-            // Paredes da estufa
-            CriarParedeEstufa(estrutura, "Parede_F",  new Vector3(0, 1.5f, -1.5f), new Vector3(3f, 3f, 0.1f), matEstufa);
-            CriarParedeEstufa(estrutura, "Parede_T",  new Vector3(0, 1.5f,  1.5f), new Vector3(3f, 3f, 0.1f), matEstufa);
-            CriarParedeEstufa(estrutura, "Parede_E",  new Vector3(-1.5f, 1.5f, 0), new Vector3(0.1f, 3f, 3f), matEstufa);
-            CriarParedeEstufa(estrutura, "Parede_D",  new Vector3( 1.5f, 1.5f, 0), new Vector3(0.1f, 3f, 3f), matEstufa);
-            CriarParedeEstufa(estrutura, "Teto",      new Vector3(0, 3f, 0),       new Vector3(3f, 0.1f, 3f), matVidro);
-
-            // Porta com pivot para animação
-            var portaPivot = ObterOuCriar(estufa, "Porta_Pivot");
-            portaPivot.transform.localPosition = new Vector3(-1.5f, 0, -1.5f);
-            portaPivot.AddComponent<EstufaView>();
-
-            if (portaPivot.transform.Find("Porta_Mesh") == null)
-            {
-                var pm = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                pm.name = "Porta_Mesh";
-                pm.transform.SetParent(portaPivot.transform);
-                pm.transform.localPosition = new Vector3(0.5f, 1f, 0);
-                pm.transform.localScale    = new Vector3(1f, 2f, 0.05f);
-                pm.GetComponent<Renderer>().material = Mat(new Color(0.55f, 0.35f, 0.15f));
-            }
-        }
-
         UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
         Debug.Log("[AmbienteBuilder] Ambiente construído! Salve com Ctrl+S.");
     }
@@ -189,15 +150,6 @@ public class AmbienteBuilder : EditorWindow
         return go;
     }
 
-    static void CriarParedeEstufa(GameObject pai, string nome, Vector3 posLocal, Vector3 escala, Material mat)
-    {
-        if (pai.transform.Find(nome) != null) return;
-        var p = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        p.name = nome;
-        p.transform.SetParent(pai.transform);
-        p.transform.localPosition = posLocal;
-        p.transform.localScale    = escala;
-        p.GetComponent<Renderer>().material = mat;
-    }
 }
+
 #endif

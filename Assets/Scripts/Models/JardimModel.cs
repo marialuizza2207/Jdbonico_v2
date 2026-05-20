@@ -1,4 +1,3 @@
-// Estado global do jardim — sem MonoBehaviour
 public class JardimModel
 {
     public int  Pontuacao       { get; private set; }
@@ -17,7 +16,10 @@ public class JardimModel
         FloresColetadas++;
     }
 
-    public void AtivarFonte() => FonteAtivada = true;
+    public void AtivarFonte()
+    {
+        FonteAtivada = true;
+    }
 
     public bool JardimCompleto => FloresColetadas >= TotalFlores;
 }

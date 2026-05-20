@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-// Lógica da fonte: hover por proximidade e ativação por tecla E ou XR
 public class FonteController : MonoBehaviour
 {
     private FonteView view;
     private bool ativa = false;
 
-    void Awake() => view = GetComponent<FonteView>();
+    void Awake()
+    {
+        view = GetComponent<FonteView>();
+    }
 
     public void AoEntrarHover()
     {
@@ -29,8 +31,7 @@ public class FonteController : MonoBehaviour
         GerenciadorJardim.Instancia?.RegistrarAtivacaoFonte();
     }
 
-    // Eventos XR (conectados via AdicionarComponentes.cs)
-    public void AoEntrarHoverXR(HoverEnterEventArgs args) => AoEntrarHover();
-    public void AoSairHoverXR(HoverExitEventArgs args)    => AoSairHover();
-    public void AoAtivarXR(SelectEnterEventArgs args)     => AoAtivar();
+    public void AoEntrarHoverXR(HoverEnterEventArgs args) { AoEntrarHover(); }
+    public void AoSairHoverXR(HoverExitEventArgs args)    { AoSairHover(); }
+    public void AoAtivarXR(SelectEnterEventArgs args)     { AoAtivar(); }
 }

@@ -17,8 +17,7 @@ public class ConfigurarColisoes : EditorWindow
         var player = GameObject.Find("XROrigin")
                   ?? GameObject.FindWithTag("Player");
 
-        // Tenta encontrar o objeto com JogadorController
-        var jc = Object.FindFirstObjectByType<JogadorController>();
+        var jc = Object.FindObjectOfType<JogadorController>();
         if (jc != null) player = jc.gameObject;
 
         if (player == null)
@@ -35,7 +34,6 @@ public class ConfigurarColisoes : EditorWindow
             Debug.Log($"[ConfigurarColisoes] CharacterController adicionado em '{player.name}'.");
         }
 
-        // Ajusta dimensões para um personagem em pé
         cc.height = 1.8f;
         cc.radius = 0.3f;
         cc.center = new Vector3(0f, 0.9f, 0f);
@@ -52,7 +50,6 @@ public class ConfigurarColisoes : EditorWindow
         var arvoresGO = GameObject.Find("Arvores");
         if (arvoresGO == null)
         {
-            // Tenta encontrar pelas árvores individuais
             for (int i = 1; i <= 10; i++)
             {
                 var arv = GameObject.Find($"Arvore_0{i}");
@@ -61,7 +58,6 @@ public class ConfigurarColisoes : EditorWindow
             return;
         }
 
-        // Remove colisores de todos os filhos do grupo Arvores
         foreach (Transform filho in arvoresGO.transform)
             RemoverColisoresRecursivo(filho.gameObject);
 
@@ -70,7 +66,6 @@ public class ConfigurarColisoes : EditorWindow
 
     static void RemoverColisoresRecursivo(GameObject go)
     {
-        // Remove todos os tipos de collider no objeto e seus filhos
         foreach (var col in go.GetComponentsInChildren<Collider>(includeInactive: true))
         {
             Undo.DestroyObjectImmediate(col);

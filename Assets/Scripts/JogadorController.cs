@@ -1,10 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Movimentação WASD + detecção de objetos interativos por proximidade
 public class JogadorController : MonoBehaviour
 {
-    [SerializeField] public Camera referenciaCamera;
+    public Camera referenciaCamera;
     [SerializeField] float velocidade         = 3f;
     [SerializeField] float raioColeta         = 1.5f;
     [SerializeField] float sensibilidadeMouse = 120f;
@@ -14,7 +13,10 @@ public class JogadorController : MonoBehaviour
     private FonteController     fonteAtual = null;
     private float               velocidadeY = 0f;
 
-    void Awake() => cc = GetComponent<CharacterController>();
+    void Awake()
+    {
+        cc = GetComponent<CharacterController>();
+    }
 
     void Update()
     {
@@ -61,11 +63,9 @@ public class JogadorController : MonoBehaviour
 
     void DetectarProximidade()
     {
-        // Coleta automática de flores
         foreach (var col in Physics.OverlapSphere(transform.position, raioColeta))
             col.GetComponent<FlorescenteController>()?.TentarColetar();
 
-        // Hover da fonte
         FonteController fonteEncontrada = null;
         foreach (var col in Physics.OverlapSphere(transform.position, raioFonte))
             if (fonteEncontrada == null) fonteEncontrada = col.GetComponent<FonteController>();
@@ -92,11 +92,4 @@ public class JogadorController : MonoBehaviour
         if (atual != null) onEnter();
     }
 
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, raioColeta);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, raioFonte);
-    }
 }

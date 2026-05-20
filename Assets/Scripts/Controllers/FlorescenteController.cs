@@ -2,16 +2,14 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-// Lógica de coleta da flor — registra no Gerenciador e aciona a View
 public class FlorescenteController : MonoBehaviour
 {
-    [SerializeField] public PlantaModel dados;
+    public PlantaModel dados;
 
     private bool coletada = false;
 
     void Reset()
     {
-        // Dados padrão ao adicionar o componente
         dados = new PlantaModel("Flor", "Species sp.", "Planta ornamental do jardim.", 10, Color.white);
     }
 
@@ -25,6 +23,8 @@ public class FlorescenteController : MonoBehaviour
         if (GetComponent<FlorescenteView>() == null) gameObject.SetActive(false);
     }
 
-    // Chamado pelo XRSimpleInteractable (controllers do Quest)
-    public void OnInteracaoXR(SelectEnterEventArgs args) => TentarColetar();
+    public void OnInteracaoXR(SelectEnterEventArgs args)
+    {
+        TentarColetar();
+    }
 }

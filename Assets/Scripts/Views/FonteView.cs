@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// Feedback visual da fonte: efeito de água via ParticleSystem
 public class FonteView : MonoBehaviour
 {
     [Tooltip("Posição local de onde a água sai (topo da fonte). Deixe (0,0,0) para auto.")]
@@ -9,9 +8,12 @@ public class FonteView : MonoBehaviour
     private ParticleSystem agua;
     private bool ativa = false;
 
-    void Start() => agua = CriarEfeitoAgua();
+    void Start()
+    {
+        agua = CriarEfeitoAgua();
+    }
 
-    public void SetHover(bool hover) { } // feedback via HUD, não visual aqui
+    public void SetHover(bool hover) { }
 
     public void SetAtivo()
     {
@@ -28,7 +30,6 @@ public class FonteView : MonoBehaviour
 
     ParticleSystem CriarEfeitoAgua()
     {
-        // Calcula o topo do collider/renderer como ponto de emissão
         Vector3 posEmissao = transform.position + offsetAgua;
         if (offsetAgua == Vector3.zero)
         {
@@ -48,7 +49,6 @@ public class FonteView : MonoBehaviour
         var ps = go.AddComponent<ParticleSystem>();
         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
-        // Main
         var main = ps.main;
         main.loop            = true;
         main.startLifetime   = new ParticleSystem.MinMaxCurve(2.2f, 3.0f);
@@ -61,18 +61,15 @@ public class FonteView : MonoBehaviour
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.maxParticles    = 300;
 
-        // Emissão
         var em = ps.emission;
         em.rateOverTime = 80f;
 
-        // Forma: cone largo simulando jato de água
         var shape = ps.shape;
         shape.enabled   = true;
         shape.shapeType = ParticleSystemShapeType.Cone;
         shape.angle     = 25f;
         shape.radius    = 0.05f;
 
-        // Tamanho decresce ao cair
         var sizeOverLife = ps.sizeOverLifetime;
         sizeOverLife.enabled = true;
         var sizeCurve = new AnimationCurve();
@@ -80,7 +77,6 @@ public class FonteView : MonoBehaviour
         sizeCurve.AddKey(1f, 0.3f);
         sizeOverLife.size = new ParticleSystem.MinMaxCurve(1f, sizeCurve);
 
-        // Opacidade: some ao final
         var colorOverLife = ps.colorOverLifetime;
         colorOverLife.enabled = true;
         var grad = new Gradient();
@@ -95,7 +91,6 @@ public class FonteView : MonoBehaviour
             });
         colorOverLife.color = new ParticleSystem.MinMaxGradient(grad);
 
-        // Renderer — shader URP particles
         var pr = go.GetComponent<ParticleSystemRenderer>();
         pr.material = new Material(
             Shader.Find("Universal Render Pipeline/Particles/Lit")

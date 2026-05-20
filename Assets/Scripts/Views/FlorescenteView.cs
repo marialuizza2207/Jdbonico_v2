@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// Feedback visual da flor coletável: oscilação senoidal + rotação contínua
 public class FlorescenteView : MonoBehaviour
 {
     [SerializeField] float velocidadeOscilacao = 1.5f;
@@ -9,7 +8,10 @@ public class FlorescenteView : MonoBehaviour
     private Vector3 posicaoInicial;
     private bool ativa = true;
 
-    void Start() => posicaoInicial = transform.position;
+    void Start()
+    {
+        posicaoInicial = transform.position;
+    }
 
     void Update()
     {

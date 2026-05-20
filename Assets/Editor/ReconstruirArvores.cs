@@ -31,10 +31,10 @@ public class ReconstruirArvores : EditorWindow
 
     static readonly (Vector3 pos, float altTronco, float escCopa, Color corCopa)[] configs =
     {
-        (new Vector3(-6f, 0f, -5f), 2.2f, 2.4f, new Color(0.13f, 0.52f, 0.13f)), // verde médio
-        (new Vector3( 6f, 0f, -5f), 2.8f, 2.0f, new Color(0.10f, 0.45f, 0.10f)), // verde escuro
-        (new Vector3(-6f, 0f,  8f), 2.0f, 2.6f, new Color(0.20f, 0.58f, 0.15f)), // verde amarelado
-        (new Vector3( 6f, 0f,  8f), 2.5f, 2.2f, new Color(0.12f, 0.48f, 0.18f)), // verde frio
+        (new Vector3(-6f, 0f, -5f), 2.2f, 2.4f, new Color(0.13f, 0.52f, 0.13f)),
+        (new Vector3( 6f, 0f, -5f), 2.8f, 2.0f, new Color(0.10f, 0.45f, 0.10f)),
+        (new Vector3(-6f, 0f,  8f), 2.0f, 2.6f, new Color(0.20f, 0.58f, 0.15f)),
+        (new Vector3( 6f, 0f,  8f), 2.5f, 2.2f, new Color(0.12f, 0.48f, 0.18f)),
     };
 
     static void CriarArvores()
@@ -49,7 +49,6 @@ public class ReconstruirArvores : EditorWindow
             var (pos, altTronco, escCopa, corCopa) = configs[i];
             string nome = $"Arvore_0{i + 1}";
 
-            // Recria do zero se já existir (remove filhos antigos)
             var arv = GameObject.Find(nome);
             if (arv == null)
             {
@@ -58,7 +57,6 @@ public class ReconstruirArvores : EditorWindow
             }
             else
             {
-                // Remove filhos para recriar
                 for (int c = arv.transform.childCount - 1; c >= 0; c--)
                     Undo.DestroyObjectImmediate(arv.transform.GetChild(c).gameObject);
             }
@@ -66,13 +64,11 @@ public class ReconstruirArvores : EditorWindow
             arv.transform.position = pos;
             Undo.RegisterCreatedObjectUndo(arv, nome);
 
-            // ── Tronco ──────────────────────────────────────────────
             var tronco = Cylinder("Tronco_Mesh", arv.transform,
                 localPos: new Vector3(0f, altTronco * 0.5f, 0f),
                 scale:    new Vector3(0.28f, altTronco * 0.5f, 0.28f),
                 mat:      matTronco);
 
-            // ── Copa (3 esferas em camadas) ──────────────────────────
             var matCopa = CriarMaterial(shader, corCopa);
             float base3D = altTronco + escCopa * 0.45f;
 

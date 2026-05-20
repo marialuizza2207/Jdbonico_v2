@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEditor;
 using TMPro;
 
-// Liga automaticamente todas as referências serializadas entre componentes
 public class ConectarReferencias : EditorWindow
 {
     [MenuItem("EcoBotanica/4. Conectar Referências")]
@@ -11,9 +10,8 @@ public class ConectarReferencias : EditorWindow
 
     public static void Conectar()
     {
-        // GerenciadorJardim → HUDView
-        var gj  = Object.FindFirstObjectByType<GerenciadorJardim>();
-        var hud = Object.FindFirstObjectByType<HUDView>();
+        var gj  = Object.FindObjectOfType<GerenciadorJardim>();
+        var hud = Object.FindObjectOfType<HUDView>();
 
         if (gj && hud)
         {
@@ -21,7 +19,6 @@ public class ConectarReferencias : EditorWindow
             EditorUtility.SetDirty(gj);
         }
 
-        // HUDView → TextMeshPro
         if (hud)
         {
             hud.textoPontuacao = FindTMP("Texto_Pontuacao");
@@ -31,8 +28,7 @@ public class ConectarReferencias : EditorWindow
             EditorUtility.SetDirty(hud);
         }
 
-        // JogadorController → câmera principal
-        var jc  = Object.FindFirstObjectByType<JogadorController>();
+        var jc  = Object.FindObjectOfType<JogadorController>();
         var cam = Camera.main;
         if (jc && cam)
         {

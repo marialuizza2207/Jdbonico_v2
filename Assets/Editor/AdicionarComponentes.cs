@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-// Adiciona scripts, colliders e eventos XR em todos os interativos da cena
 public class AdicionarComponentes : EditorWindow
 {
     [MenuItem("EcoBotanica/3. Adicionar Componentes")]
@@ -16,8 +15,6 @@ public class AdicionarComponentes : EditorWindow
         ConfigurarJogador();
         ConfigurarFlores();
         ConfigurarFonte();
-        ConfigurarPaineis();
-        ConfigurarEstufa();
 
         ConectarReferencias.Conectar();
 
@@ -124,58 +121,6 @@ public class AdicionarComponentes : EditorWindow
         var xr = AddIfMissing<XRSimpleInteractable>(go);
         xr.hoverEntered.AddListener(ctrl.AoEntrarHoverXR);
         xr.hoverExited.AddListener(ctrl.AoSairHoverXR);
-        xr.selectEntered.AddListener(ctrl.AoAtivarXR);
-
-        EditorUtility.SetDirty(go);
-    }
-
-    static readonly (string nomeComum, string nomeCientifico, string descricao)[] dadosPaineis =
-    {
-        ("Bambu",     "Bambusoideae sp.",          "O bambu cresce até 1m por dia — a planta de crescimento mais rápido do mundo."),
-        ("Helicônia", "Heliconia rostrata",         "Originária da América tropical, usada em arranjos e favorita de beija-flores."),
-        ("Bromélia",  "Bromeliaceae sp.",           "Armazena água no caule, criando microhabitats para anfíbios e insetos."),
-    };
-
-    static void ConfigurarPaineis()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            var go = GameObject.Find($"Planta_Info_0{i + 1}");
-            if (go == null) continue;
-
-            AddIfMissing<CapsuleCollider>(go);
-            var ctrl = AddIfMissing<PainelBotanicoController>(go);
-
-            var (nomeComum, nomeCientifico, descricao) = dadosPaineis[i];
-            ctrl.dadosPlanta = new PlantaModel(nomeComum, nomeCientifico, descricao, 0, Color.green);
-
-            var painelGO = go.transform.Find($"Painel_0{i + 1}")?.gameObject;
-            if (painelGO != null)
-            {
-                var view = AddIfMissing<PainelBotanicoView>(painelGO);
-                view.textoNome       = painelGO.transform.Find("Painel_Nome")?.GetComponent<TMPro.TextMeshProUGUI>();
-                view.textoCientifico = painelGO.transform.Find("Painel_Cientifico")?.GetComponent<TMPro.TextMeshProUGUI>();
-                view.textoDescricao  = painelGO.transform.Find("Painel_Descricao")?.GetComponent<TMPro.TextMeshProUGUI>();
-                ctrl.painel = view;
-                EditorUtility.SetDirty(painelGO);
-            }
-
-            var xr = AddIfMissing<XRSimpleInteractable>(go);
-            xr.selectEntered.AddListener(ctrl.AoAtivarXR);
-
-            EditorUtility.SetDirty(go);
-        }
-    }
-
-    static void ConfigurarEstufa()
-    {
-        var go = GameObject.Find("Estufa");
-        if (go == null) return;
-
-        AddIfMissing<BoxCollider>(go);
-        var ctrl = AddIfMissing<EstufaController>(go);
-
-        var xr = AddIfMissing<XRSimpleInteractable>(go);
         xr.selectEntered.AddListener(ctrl.AoAtivarXR);
 
         EditorUtility.SetDirty(go);
