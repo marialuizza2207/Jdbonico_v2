@@ -1,151 +1,87 @@
 # EcoBotanica — Jardim Botânico Virtual
 
-> **Web 3.0 | Residência em TIC 29 — Unidade 1 / Capítulo 3**
+> Web 3.0 | Residência em TIC 29 — Unidade 1 / Capítulo 3
 > Aluna: Maria Luiza de Moraes Mazon | Professora: Ana Beatriz
 
-Ambiente VR interativo criado em Unity 6 com Meta XR SDK. O jogador explora um jardim botânico virtual, coleta flores luminosas espalhadas pelo jardim e ativa uma fonte d'água. Totalmente testável no Unity Editor via teclado e mouse, sem necessidade de headset.
+Ambiente VR interativo feito em Unity 6 com Meta XR SDK. O jogador explora um jardim botânico virtual, coleta flores espalhadas pelo jardim e ativa uma fonte d'água. Funciona no Unity Editor via teclado e mouse, sem precisar de headset.
 
 ---
 
 ## Requisitos
 
-| Item | Versão |
-|---|---|
-| Unity | 6000.3.14f1 (LTS) |
-| Meta XR SDK Core | 201.0.0 |
-| XR Interaction Toolkit | 3.0.7 |
-| Universal Render Pipeline (URP) | 17.0.3 |
-| TextMesh Pro | 3.0.6 |
-| Plataforma de build | Android (Meta Quest) |
+Desenvolvido com Unity 6000.3.14f1 (LTS), Meta XR SDK Core 201.0.0, XR Interaction Toolkit 3.0.7, URP 17.0.3 e TextMesh Pro. Build configurado para Android (Meta Quest).
 
 ---
 
 ## Como abrir o projeto
 
-1. Abra o **Unity Hub**
-2. Clique em **Add → Add project from disk** e selecione a pasta `Trabalho_avancado_Maria/`
-3. Aguarde o Unity importar os pacotes
+1. Abra o Unity Hub
+2. Clique em Add → Add project from disk e selecione a pasta `Trabalho_avancado_Maria/`
+3. Aguarde o Unity importar os pacotes (pode levar alguns minutos)
 4. Abra a cena: `Assets/scene1.unity`
 
 ---
 
 ## Controles (Unity Editor — teclado e mouse)
 
-| Tecla / Input | Ação |
-|---|---|
-| `W` / `↑` | Mover para frente |
-| `S` / `↓` | Mover para trás |
-| `A` / `←` | Mover para esquerda |
-| `D` / `→` | Mover para direita |
-| Botão direito do mouse + arrastar | Virar horizontalmente |
-| `E` | Ativar a fonte d'água (ao se aproximar) |
+- `W` / `↑` — frente
+- `S` / `↓` — atrás
+- `A` / `←` — esquerda
+- `D` / `→` — direita
+- Botão direito do mouse + arrastar — virar
+- `E` — ativar a fonte d'água (quando próximo)
 
 ---
 
-## Mecânicas implementadas
+## Mecânicas
 
-| Mecânica | Como funciona |
-|---|---|
-| **Coleta de flores** | Ao se aproximar de uma flor/bolinha coletável, a coleta ocorre automaticamente via `Physics.OverlapSphere`. O HUD atualiza a pontuação e o contador de flores coletadas em tempo real. |
-| **Fonte d'água** | Ao se aproximar da `Fonte_Principal`, o HUD exibe "Pressione E para ativar a fonte!". Ao pressionar `E`, um sistema de partículas simula o jato d'água (partículas azul/ciano que sobem com velocidade e caem com gravidade). O HUD confirma "Fonte ativada! A água jorra!". |
-| **HUD World Space** | Sempre visível, segue a câmera com interpolação suave (Lerp/Slerp), exibindo pontuação, contagem de flores, mensagem contextual e estado atual. |
-| **Colisão física** | O jogador (CharacterController) colide com banco e fonte, mas atravessa as árvores livremente. As árvores são decorativas e não possuem interação. |
-| **Suporte XR (Quest)** | Flores e fonte possuem `XRSimpleInteractable` e respondem ao trigger dos controles do Meta Quest. |
+A coleta de flores é automática por proximidade: o `JogadorController` chama `Physics.OverlapSphere` a cada frame e qualquer `FlorescenteController` dentro do raio é coletado. O HUD World Space acompanha a câmera via Lerp e mostra pontuação, progresso de flores e mensagens contextuais.
+
+A fonte funciona em dois passos: ao se aproximar o HUD avisa, e ao pressionar `E` um `ParticleSystem` é criado por código (partículas azuis com gravidade simulando jato d'água). Flores e fonte têm `XRSimpleInteractable` para funcionar com os controles do Meta Quest.
 
 ---
 
-## Apresentando o Projeto
+## Como foi feito
 
-EcoBotanica é um jardim botânico virtual para o Metaverso, com foco em educação ambiental imersiva. O jogador percorre um ambiente ao ar livre com vegetação, estruturas e elementos interativos, aprendendo sobre espécies botânicas enquanto coleta flores e explora o espaço.
+O projeto usa arquitetura MVC: `JardimModel` guarda o estado (pontuação, flores), as Views cuidam da apresentação visual e os Controllers têm a lógica. O `GerenciadorJardim` é o Singleton central que conecta tudo.
 
----
+Os scripts em `Assets/Editor/` automatizam a montagem da cena via menus `EcoBotanica` no Unity — dá pra recriar toda a hierarquia em alguns cliques sem arrastar nada manualmente.
 
-## Contexto e Objetivos
-
-No Metaverso, ambientes educacionais imersivos superam a barreira do desengajamento das aulas tradicionais. Um jardim botânico virtual permite que estudantes de qualquer lugar explorem plantas, aprendam taxonomia de forma lúdica e vivenciem a natureza sem limitações geográficas. O projeto conecta **educação**, **entretenimento** e **meio ambiente** no contexto Web 3.0.
+**Dificuldades:** configurar o Meta XR SDK no Linux foi trabalhoso — o SDK não foi pensado pra Linux e havia um bug no `OVRProjectConfig.cs` que causava crash no Editor (Enumerable.Range com count negativo). Precisei corrigir direto no arquivo do pacote. Os shaders do NatureStarterKit2 também eram incompatíveis com URP e tive que substituir por árvores 3D de outro pacote.
 
 ---
 
-## Processo de Criação e Dificuldades
+## Hierarquia da cena
 
-O projeto foi desenvolvido com arquitetura **MVC** (Model-View-Controller), separando dados (`JardimModel`), apresentação (Views) e lógica (Controllers). Scripts Editor automatizam a montagem da cena via menus `EcoBotanica`.
+A cena `scene1.unity` está organizada em quatro grupos:
 
-**Principais desafios:**
-- Configurar o Meta XR SDK 201.0.0 no Linux com Unity 6 (correção de symlinks do NDK)
-- Corrigir `ArgumentOutOfRangeException` no `OVRProjectConfig` (bug Linux no `Enumerable.Range` com SDK version < 200)
-- Shaders do NatureStarterKit2 incompatíveis com URP — substituídos por árvores 3D importadas
-- Conectar referências serializadas entre scripts via Editor Script sem drag-and-drop manual
-
----
-
-## Hierarquia da Cena
-
-```
-scene1 (Scene)
-│
-├── [--- MANAGEMENT ---]
-│   ├── GerenciadorJardim       ← Singleton — pontuação, flores, estados
-│   ├── EventSystem
-│   └── HUD_Canvas              ← Canvas WorldSpace (segue a câmera com Lerp)
-│       ├── Texto_Pontuacao
-│       ├── Texto_Flores
-│       ├── Texto_Mensagem
-│       └── Texto_Estado
-│
-├── [--- PLAYER ---]
-│   └── XROrigin                ← JogadorController + CharacterController
-│       └── Main Camera
-│
-├── [--- ENVIRONMENT ---]
-│   ├── Plano_Gramado           ← gramado com textura PBR
-│   ├── Directional Light
-│   ├── Pavilhao                ← estrutura central com colunas e telhado
-│   ├── Banco                   ← banco de jardim (colisão física)
-│   ├── Arvores                 ← árvores 3D importadas (sem colisão, decorativas)
-│   └── Poste_Luz               ← Point Light
-│
-└── [--- INTERACTABLES ---]
-    ├── Flor_Coletavel_01       ← Rosa       — 10 pts
-    ├── Flor_Coletavel_02       ← Tulipa     — 15 pts
-    ├── Flor_Coletavel_03       ← Orquídea   — 25 pts
-    ├── Flor_Coletavel_04       ← Girassol   — 20 pts
-    ├── Flor_Coletavel_05       ← Lavanda    — 30 pts
-    └── Fonte_Principal         ← E → ativa ParticleSystem de água
-```
+- `[--- MANAGEMENT ---]` — GerenciadorJardim (Singleton), EventSystem e HUD_Canvas WorldSpace
+- `[--- PLAYER ---]` — XROrigin com JogadorController e CharacterController
+- `[--- ENVIRONMENT ---]` — gramado PBR, luz direcional, pavilhão, banco, árvores decorativas e poste
+- `[--- INTERACTABLES ---]` — cinco flores coletáveis (Rosa 10pts, Tulipa 15pts, Orquídea 25pts, Girassol 20pts, Lavanda 30pts) e Fonte_Principal
 
 ---
 
-## Arquitetura MVC
+## Estrutura de scripts
 
 ```
 Assets/Scripts/
-├── GerenciadorJardim.cs          ← Singleton central
-├── JogadorController.cs          ← movimento + rotação + detecção por proximidade
+├── GerenciadorJardim.cs
+├── JogadorController.cs
 ├── Models/
-│   ├── PlantaModel.cs            ← dados de uma planta (pontos, nome)
-│   └── JardimModel.cs            ← estado global do jardim
+│   ├── PlantaModel.cs
+│   └── JardimModel.cs
 ├── Views/
-│   ├── HUDView.cs                ← HUD WorldSpace com câmera follow
-│   ├── FlorescenteView.cs        ← oscilação senoidal + rotação
-│   └── FonteView.cs              ← ParticleSystem de água
+│   ├── HUDView.cs
+│   ├── FlorescenteView.cs
+│   └── FonteView.cs
 └── Controllers/
-    ├── FlorescenteController.cs  ← coleta automática + XR
-    └── FonteController.cs        ← hover + ativação + XR
+    ├── FlorescenteController.cs
+    └── FonteController.cs
 ```
 
 ---
 
-## Configuração de Build (Android / Meta Quest)
+## Build para Meta Quest
 
-1. **File → Build Settings → Android → Switch Platform**
-2. **Player Settings:**
-   - Minimum API Level: Android 10 (Level 29)
-   - Scripting Backend: IL2CPP
-   - Target Architecture: ARM64
-   - Texture Compression: ASTC
-3. **Project Settings → XR Plug-in Management → Android:** marcar **OpenXR** + Oculus Touch Controller Profile
-4. **Project Settings → XR Plug-in Management → PC:** desmarcar todos os loaders (evita erro no Linux)
-
----
-
-*Web 3.0 | Residência em TIC 29 — Maria Luiza de Moraes Mazon*
+File → Build Settings → Android → Switch Platform. No Player Settings: API Level mínimo Android 10 (Level 29), IL2CPP, ARM64, textura ASTC. Em XR Plug-in Management → Android habilitar OpenXR + Oculus Touch Controller Profile. Na aba PC/Linux desabilitar todos os loaders (evita erro de inicialização no Linux).
