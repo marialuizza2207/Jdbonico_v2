@@ -9,6 +9,9 @@
 *.apk
 *.aab
 *.keystore
+*.mp4
+.utmp/
+EcoBotanica_BurstDebugInformation_DoNotShip/
 .vs/
 .idea/
 .vscode/
